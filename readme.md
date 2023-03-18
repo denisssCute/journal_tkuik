@@ -8,7 +8,7 @@
 
 # Стэк проекта:
 
-Frontend - HTML, CSS, JS
+Frontend - HTML, CSS, JS <p>Привет</p>
 Backend - native php
 DataBase - MySQL
 AdminPanel for DB - phpMyAdmin
