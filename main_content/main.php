@@ -59,16 +59,6 @@ $nameTeacher = $_SESSION['name_teacher'];
 $idTeacher = $_SESSION['id'];
 $number_table = $_SESSION['number_table'];
 
-//$infoTeacher = mysqli_query($connect, "SELECT teachers.disciplina, teachers.name FROM `teachers` WHERE teachers.id = $idTeacher"); //устанавливаем название предмета и им преподавателя
-//$infoTeacher = mysqli_fetch_all($infoTeacher);
-//$nameTeacher = $infoTeacher[0][1];
-
-//
-//$json = mysqli_query($connect, "SELECT completed_state FROM `lessons_hours` WHERE discName = '$discTeacher';");
-//$json = mysqli_fetch_all($json);
-//$json = $json[0][0];
-//$json_data = json_decode($json, true); //получили ассоциативный массив со всеми завершёнными и не зав-нными темами
-
 $query = "SELECT completed_state FROM `lessons_hours` WHERE discName = ? AND id_teacher = ?;";
 $stmt = mysqli_prepare($connect, $query);
 mysqli_stmt_bind_param($stmt, "ss", $discTeacher, $idTeacher);
@@ -76,7 +66,7 @@ mysqli_stmt_execute($stmt);
 $result = mysqli_stmt_get_result($stmt);
 $result = mysqli_fetch_all($result);
 $json = $result[0][0];
-$json_data = json_decode($json, true);
+$json_data = json_decode($json, true); //получили ассоциативный массив со всеми завершёнными и не зав-нными темами
 
 
 $listGroup = mysqli_query($connect, "SELECT students.group_number FROM students JOIN disciplina_$number_table ON disciplina_$number_table.id = students.id;");
