@@ -13,7 +13,7 @@ if(isset($_SESSION['last_activity'])) {
         header('Location: ../logout.php');
     }
 }
-
+unset($_SESSION['updateIsOK']);
 $_SESSION['last_activity'] = time();
 
 $idTeacher = $_SESSION['id'];
@@ -51,9 +51,9 @@ $disciplins = json_decode($disciplins, true);
     </a>
     <div class="container-add-group-main">
         <div class="modal-win">
-            <form action="select_disciplina.php" method="post" class="select-disciplina-form">
+            <form action="select_disciplina.php" method="post" class="select-disciplina-form" id="show_form">
                 <h3>Пожалуйста, выберите предмет, с которым хотите работать: </h3>
-                <select name="select-disciplina" id="">
+                <select name="select-disciplina" id="search_group">
                     <option value="Выберите предмет...">Выберите предмет...</option>
                     <?php foreach($disciplins as $disc) {
                         if ($disc != NULL) {
@@ -65,10 +65,10 @@ $disciplins = json_decode($disciplins, true);
                     if (isset($_SESSION['none_disc'])) {
                         $text = $_SESSION['none_disc'];
                         echo "<div style=\"background-color: rgba(255, 18, 0, 0.2);padding: 7px; width: 580px; border-radius: 7px; margin-bottom: 10px\">";
-                        echo "<p align='center' style=\"font-family: sans-serif; margin: 5px 0 10px 0;max-width: 580px;\">Заполните <a style='color: #0071f0;' href='../registration/pasport.php'>паспорт предмета</a>, чтобы работать с ним.</p>";
+                        echo "<p align='center' style=\"font-family: sans-serif; margin: 10px 0;max-width: 580px;\">Заполните <a style='color: #0071f0;' href='../registration/pasport.php'>паспорт предмета</a>, чтобы работать с ним.</p>";
 //                        echo "<p align='center' style=\"font-family: sans-serif; margin: 5px 0 10px 0;max-width: 580px\">$text</p>";
 //                        echo "<p align='center' style=\"font-family: sans-serif; margin: 5px 0 10px 0;max-width: 580px\"></p>";
-                        echo "<p align='center' style=\"font-family: sans-serif; margin: 5px 0 10px 0;max-width: 580px\"><b>Или воспользуйтесь тестовым аккаунтом на странице входа.</b></p>";
+                        //echo "<p align='center' style=\"font-family: sans-serif; margin: 5px 0 10px 0;max-width: 580px\"><b>Или воспользуйтесь тестовым аккаунтом на странице входа.</b></p>";
                         echo "</div>";
                     }
 
@@ -81,7 +81,7 @@ $disciplins = json_decode($disciplins, true);
                         echo "</div>";
                     }
                 ?>
-                <button name="do_select_disciplina" class="form-button">Далее</button>
+                <button name="do_select_disciplina" class="form-button" onclick="a()">Далее</button>
             </form>
         </div>
     </div>

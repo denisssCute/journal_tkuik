@@ -14,18 +14,19 @@ if(isset($_SESSION['last_activity'])) {
     }
 }
 
+unset($_SESSION['updateIsOK']);
 
 $_SESSION['last_activity'] = time();
 
-$idTeacher = $_SESSION['id'];
+$idTeacher = intval($_SESSION['id']);
 
 $nameTeacher = $_SESSION['name_teacher'];
 
 $discTeacher = $_SESSION['disciplina'];
 
-$query = "SELECT lessons_hours.total,lessons_hours.group_number FROM `lessons_hours` WHERE discName = ?;";
+$query = "SELECT lessons_hours.total,lessons_hours.group_number FROM `lessons_hours` WHERE discName = ? AND id_teacher = ?;";
 $stmt = mysqli_prepare($connect, $query);
-mysqli_stmt_bind_param($stmt, "s", $discTeacher);
+mysqli_stmt_bind_param($stmt, "si", $discTeacher, $idTeacher);
 mysqli_stmt_execute($stmt);
 $result = mysqli_stmt_get_result($stmt);
 $result = mysqli_fetch_all($result);
@@ -64,7 +65,7 @@ $hours = $result[0][0];
 
                 ?>
             </ol>
-            <button name="do_create_pasport" name="do_pasport" id="create_pasport" class="form-button">Создать паспорт</button>
+            <!-- <button name="do_create_pasport" name="do_pasport" id="create_pasport" class="form-button">Создать паспорт</button> -->
         </form>
     </div>
 </div>

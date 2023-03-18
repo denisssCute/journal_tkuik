@@ -13,8 +13,6 @@ if(isset($_SESSION['last_activity'])) {
     }
 }
 
-
-
 $_SESSION['last_activity'] = time();
 
 $number_table = $_SESSION['number_table'];
@@ -28,6 +26,7 @@ if ($c === 0 ) {
 }
 
 unset($_SESSION['zero_in_table']);
+unset($_SESSION['updateIsOK']);
 
 $idTeacher = $_SESSION['id'];
 $discTeacher = $_SESSION['disciplina'];
@@ -100,7 +99,7 @@ foreach ($listGroupWhoAlreadyExistsUnique as $i) {
                 </div>
                 <form action="add_script.php" class="show_group" method="post">
                     <select name="showGroupNumber" id="search_group" onchange="showGroupAdd(this)">
-                        <option >Выбрать группу</option>
+                        <option>Выбрать группу</option>
                         <?php
                         $students = array();
 

@@ -1,7 +1,7 @@
 let allTextarea = document.querySelectorAll("textarea");
 let allMainTableTh = document.querySelectorAll(".thMainTable");
 let completeInput = document.querySelector('#completionInput'); //инупт с JSON, в котором находятся все темы
-
+let showForm = document.getElementById('show_form');
 let jsonFromServer = document.querySelectorAll('.invisibleTextarea');
 let json = jsonFromServer[0].defaultValue
 json = JSON.parse(json)
@@ -79,9 +79,13 @@ inputs.forEach(i => {
     i.value = today;
 })
 
-function putJsonInCompleteInput() {
-}
 
+showForm.addEventListener('submit', (e) => {
+    let selectSearchGroup = document.getElementById('search_group');
+    if (selectSearchGroup.value === 'Группа') {
+        e.preventDefault()
+    }
+})
 
 
 

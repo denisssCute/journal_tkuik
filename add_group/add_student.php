@@ -14,13 +14,14 @@ if(isset($_SESSION['last_activity'])) {
 }
 
 $_SESSION['last_activity'] = time();
+unset($_SESSION['updateIsOK']);
 
 $number_table = $_SESSION['number_table'];
 $idTeacher = $_SESSION['id'];
 $discTeacher = $_SESSION['disciplina'];
 $nameTeacher = $_SESSION['name_teacher'];
 
-$listGroup = mysqli_query($connect, "SELECT lessons_hours.group_number FROM lessons_hours WHERE lessons_hours.discName = '$discTeacher';");
+$listGroup = mysqli_query($connect, "SELECT lessons_hours.group_number FROM lessons_hours WHERE lessons_hours.discName = '$discTeacher' AND id_teacher = '$idTeacher';");
 $listGroup = mysqli_fetch_all($listGroup);
 $listGroupUnique = array();
 
@@ -91,7 +92,7 @@ if (isset($data['do_create_pasport'])) {
 <div class="container-add-group-main">
 
     <div class="modal-win" style="width: 580px;font-family: sans-serif">
-        <form action="add_student.php" method="post" class="pasport_form">
+        <form action="add_student.php" method="post" class="pasport_form" id="show_form">
             <h2 align="left" style="margin-bottom: 25px">Добавить студента</h2>
             <div class="form-group add_disc_header">
                 <input type="text" name="name_student" class="form-input" id="inputGroup" style="padding: 10px 0px;font-size: 18px" placeholder=" ">
@@ -104,7 +105,7 @@ if (isset($data['do_create_pasport'])) {
                 </select>
             </div>
             <input type="text" class="invisible" name="jsondisc" id="jsoninput" value="">
-            <button name="do_create_pasport" name="do_pasport" id="create_pasport" class="form-button">Добавить студента</button>
+            <button name="do_create_pasport" name="do_pasport" id="create_pasport" class="form-button" onclick="a()">Добавить студента</button>
         </form>
     </div>
 </div>

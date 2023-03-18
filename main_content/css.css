@@ -357,7 +357,7 @@ textarea::selection {
     grid-template-columns: 45% 45%;
     grid-column-gap: 5px;
     align-items: center;
-    justify-content: center;
+    justify-content: left;
 }
 
 

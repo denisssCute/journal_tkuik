@@ -1,7 +1,6 @@
 <?php
 require_once '../vendor/connect.php';
 
-
 session_start();
 
 if ($_SESSION['loggedin'] == false || !isset($_SESSION['id'])) {
@@ -22,8 +21,6 @@ $data = $_POST;
 
 $_SESSION['last_activity'] = time();
 
-$idTeacher = $_SESSION['id'];
-
 $nameTeacher = $_SESSION['name_teacher'];
 
 $data = $_POST;
@@ -32,6 +29,8 @@ if (isset($data['do_create_pasport'])) {
 
     $json4ik = json_decode($data['jsondisc']);
     $json4ik = (array) $json4ik;
+
+    $idTeacher = intval($_SESSION['id']);
 
     $query = "SELECT MAX(table_number) FROM lessons_hours;";
     $stmt = mysqli_prepare($connect, $query);
@@ -43,18 +42,25 @@ if (isset($data['do_create_pasport'])) {
 
     $count_hours = intval($data['count_hours']);
 
+    $disc = $_SESSION['disciplina'];
+
     foreach ($json4ik as $group) {
         $query2 = "INSERT INTO `lessons_hours` (`discName`, `group_number`, `exam`, `diff_exam`, `zachet`, `other_attestation`, `total`,
         `samost_work`, `theoretical_lesson`, `laboratory_lesson`, `coursovie`, `practice`, `consultation`, `promezhutAttest`,
-        `semestr1`, `semestr2`, `semestr3`, `semestr4`, `semestr5`, `semestr6`, `semestr7`, `semestr8`, `table_number`, `completed_state`)
-        VALUES (?, ?, 0, 0, 0, 0, ?, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, ?, ?)";
+        `semestr1`, `semestr2`, `semestr3`, `semestr4`, `semestr5`, `semestr6`, `semestr7`, `semestr8`, `table_number`, `completed_state`, `id_teacher`)
+        VALUES (?, ?, 0, 0, 0, 0, ?, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, ?, ?, ?)";
         $stmt = mysqli_prepare($connect, $query2);
-        mysqli_stmt_bind_param($stmt,"ssiis", $_SESSION['disciplina'],$group, $count_hours, $number_table, $stringuxa);
+        mysqli_stmt_bind_param($stmt,"ssiisi", $disc,$group, $count_hours, $number_table, $stringuxa, $idTeacher);
         mysqli_stmt_execute($stmt);
     }
 
     mysqli_query($connect,"CREATE TABLE disciplina_$number_table (`id` int NOT NULL,`tema_1` varchar(1) DEFAULT NULL,`tema_2` varchar(1) DEFAULT NULL,`tema_3` varchar(1) DEFAULT NULL,`tema_4` varchar(1) DEFAULT NULL,`tema_5` varchar(1) DEFAULT NULL,`tema_6` varchar(1) DEFAULT NULL,`tema_7` varchar(1) DEFAULT NULL,`tema_8` varchar(1) DEFAULT NULL,`tema_9` varchar(1) DEFAULT NULL,`tema_10` varchar(1) DEFAULT NULL,`tema_11` varchar(1) DEFAULT NULL,`tema_12` varchar(1) DEFAULT NULL,`tema_13` varchar(1) DEFAULT NULL,`tema_14` varchar(1) DEFAULT NULL,`tema_15` varchar(1) DEFAULT NULL,`tema_16` varchar(1) DEFAULT NULL,`tema_17` varchar(1) DEFAULT NULL,`tema_18` varchar(1) DEFAULT NULL,`tema_19` varchar(1) DEFAULT NULL,`tema_20` varchar(1) DEFAULT NULL,`tema_21` varchar(1) DEFAULT NULL,`tema_22` varchar(1) DEFAULT NULL,`tema_23` varchar(1) DEFAULT NULL,`tema_24` varchar(1) DEFAULT NULL,`tema_25` varchar(1) DEFAULT NULL,`tema_26` varchar(1) DEFAULT NULL,`tema_27` varchar(1) DEFAULT NULL,`tema_28` varchar(1) DEFAULT NULL,`tema_29` varchar(1) DEFAULT NULL,`tema_30` varchar(1) DEFAULT NULL,`tema_31` varchar(1) DEFAULT NULL,`tema_32` varchar(1) DEFAULT NULL,`tema_33` varchar(1) DEFAULT NULL,`tema_34` varchar(1) DEFAULT NULL,`tema_35` varchar(1) DEFAULT NULL,`tema_36` varchar(1) DEFAULT NULL,`tema_37` varchar(1) DEFAULT NULL,`tema_38` varchar(1) DEFAULT NULL,`tema_39` varchar(1) DEFAULT NULL,`tema_40` varchar(1) DEFAULT NULL,`tema_41` varchar(1) DEFAULT NULL,`tema_42` varchar(1) DEFAULT NULL,`tema_43` varchar(1) DEFAULT NULL,`tema_44` varchar(1) DEFAULT NULL,`tema_45` varchar(1) DEFAULT NULL,`tema_46` varchar(1) DEFAULT NULL,`tema_47` varchar(1) DEFAULT NULL,`tema_48` varchar(1) DEFAULT NULL,`tema_49` varchar(1) DEFAULT NULL,`tema_50` varchar(1) DEFAULT NULL,`tema_51` varchar(1) DEFAULT NULL,`tema_52` varchar(1) DEFAULT NULL,`tema_53` varchar(1) DEFAULT NULL,`tema_54` varchar(1) DEFAULT NULL,`tema_55` varchar(1) DEFAULT NULL,`tema_56` varchar(1) DEFAULT NULL,`tema_57` varchar(1) DEFAULT NULL,`tema_58` varchar(1) DEFAULT NULL,`tema_59` varchar(1) DEFAULT NULL,`tema_60` varchar(1) DEFAULT NULL,`tema_61` varchar(1) DEFAULT NULL,`tema_62` varchar(1) DEFAULT NULL,`tema_63` varchar(1) DEFAULT NULL,`tema_64` varchar(1) DEFAULT NULL,`tema_65` varchar(1) DEFAULT NULL,`tema_66` varchar(1) DEFAULT NULL,`tema_67` varchar(1) DEFAULT NULL,`tema_68` varchar(1) DEFAULT NULL,`tema_69` varchar(1) DEFAULT NULL,`tema_70` varchar(1) DEFAULT NULL,`tema_71` varchar(1) DEFAULT NULL,`tema_72` varchar(1) DEFAULT NULL,`tema_73` varchar(1) DEFAULT NULL,`tema_74` varchar(1) DEFAULT NULL,`tema_75` varchar(1) DEFAULT NULL,`tema_76` varchar(1) DEFAULT NULL,`tema_77` varchar(1) DEFAULT NULL,`tema_78` varchar(1) DEFAULT NULL,`tema_79` varchar(1) DEFAULT NULL,`tema_80` varchar(1) DEFAULT NULL,`tema_81` varchar(1) DEFAULT NULL,`tema_82` varchar(1) DEFAULT NULL,`tema_83` varchar(1) DEFAULT NULL,`tema_84` varchar(1) DEFAULT NULL,`tema_85` varchar(1) DEFAULT NULL,`tema_86` varchar(1) DEFAULT NULL,`tema_87` varchar(1) DEFAULT NULL,`tema_88` varchar(1) DEFAULT NULL,`tema_89` varchar(1) DEFAULT NULL,`tema_90` varchar(1) DEFAULT NULL,`tema_91` varchar(1) DEFAULT NULL,`tema_92` varchar(1) DEFAULT NULL,`tema_93` varchar(1) DEFAULT NULL,`tema_94` varchar(1) DEFAULT NULL,`tema_95` varchar(1) DEFAULT NULL,`tema_96` varchar(1) DEFAULT NULL,`tema_97` varchar(1) DEFAULT NULL,`tema_98` varchar(1) DEFAULT NULL,`tema_99` varchar(1) DEFAULT NULL,`tema_100` varchar(1) DEFAULT NULL,`tema_101` varchar(1) DEFAULT NULL,`tema_102` varchar(1) DEFAULT NULL,`tema_103` varchar(1) DEFAULT NULL,`tema_104` varchar(1) DEFAULT NULL,`tema_105` varchar(1) DEFAULT NULL,`tema_106` varchar(1) DEFAULT NULL,`tema_107` varchar(1) DEFAULT NULL,`tema_108` varchar(1) DEFAULT NULL,`tema_109` varchar(1) DEFAULT NULL,`tema_110` varchar(1) DEFAULT NULL,`tema_111` varchar(1) DEFAULT NULL,`tema_112` varchar(1) DEFAULT NULL,`tema_113` varchar(1) DEFAULT NULL,`tema_114` varchar(1) DEFAULT NULL,`tema_115` varchar(1) DEFAULT NULL,`tema_116` varchar(1) DEFAULT NULL,`tema_117` varchar(1) DEFAULT NULL,`tema_118` varchar(1) DEFAULT NULL,`tema_119` varchar(1) DEFAULT NULL,`tema_120` varchar(1) DEFAULT NULL,`tema_121` varchar(1) DEFAULT NULL,`tema_122` varchar(1) DEFAULT NULL,`tema_123` varchar(1) DEFAULT NULL,`tema_124` varchar(1) DEFAULT NULL,`tema_125` varchar(1) DEFAULT NULL,`tema_126` varchar(1) DEFAULT NULL,`tema_127` varchar(1) DEFAULT NULL,`tema_128` varchar(1) DEFAULT NULL,`tema_129` varchar(1) DEFAULT NULL,`tema_130` varchar(1) DEFAULT NULL,`tema_131` varchar(1) DEFAULT NULL,`tema_132` varchar(1) DEFAULT NULL,`tema_133` varchar(1) DEFAULT NULL,`tema_134` varchar(1) DEFAULT NULL,`tema_135` varchar(1) DEFAULT NULL,`tema_136` varchar(1) DEFAULT NULL,`tema_137` varchar(1) DEFAULT NULL,`tema_138` varchar(1) DEFAULT NULL,`tema_139` varchar(1) DEFAULT NULL,`tema_140` varchar(1) DEFAULT NULL,`tema_141` varchar(1) DEFAULT NULL,`tema_142` varchar(1) DEFAULT NULL,`tema_143` varchar(1) DEFAULT NULL,`tema_144` varchar(1) DEFAULT NULL,`tema_145` varchar(1) DEFAULT NULL,`tema_146` varchar(1) DEFAULT NULL,`tema_147` varchar(1) DEFAULT NULL,`tema_148` varchar(1) DEFAULT NULL,`tema_149` varchar(1) DEFAULT NULL,`tema_150` varchar(1) DEFAULT NULL) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;");
     $stmt->close();
+
+    // echo "INSERT INTO `lessons_hours` (`discName`, `group_number`, `exam`, `diff_exam`, `zachet`, `other_attestation`, `total`,
+        // `samost_work`, `theoretical_lesson`, `laboratory_lesson`, `coursovie`, `practice`, `consultation`, `promezhutAttest`,
+        // `semestr1`, `semestr2`, `semestr3`, `semestr4`, `semestr5`, `semestr6`, `semestr7`, `semestr8`, `table_number`, `completed_state`, `id_teacher`)
+        // VALUES ($disc, $group, 0, 0, 0, 0, $count_hours, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, $number_table, $stringuxa, $idTeacher)";
 
     $_SESSION['pasport_created'] = true;
     unset($_SESSION['none_disc']);

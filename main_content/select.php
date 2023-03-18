@@ -19,19 +19,20 @@ if(isset($_SESSION['last_activity'])) {
 }
 
 $_SESSION['last_activity'] = time();
-$idTeacher = $_SESSION['id'];
+$idTeacher = intval($_SESSION['id']);
 
 $discTeacher = $_SESSION['disciplina'];
 $nameTeacher = $_SESSION['name_teacher'];
 
-$query = "SELECT total FROM lessons_hours WHERE discName = ?";
+$query = "SELECT total FROM lessons_hours WHERE discName = ? AND id_teacher = ?";
 $stmt = mysqli_prepare($connect, $query);
-mysqli_stmt_bind_param($stmt, "s", $discTeacher);
+mysqli_stmt_bind_param($stmt, "si", $discTeacher,$idTeacher);
 mysqli_stmt_execute($stmt);
 $result = mysqli_stmt_get_result($stmt);
 $result = mysqli_fetch_all($result);
 if (empty($result)) {
     $_SESSION['none_disc'] = 'Такого предмета нет в базе! Обратитесь к администратору, либо подождите пока сайт оконачательно допилят :)';
+    unset($_SESSION['pasport_created']);
     header('Location: ../select_disciplina/select_disciplina.php');
     exit;
 }
@@ -39,8 +40,15 @@ if (empty($result)) {
 unset($_SESSION['pasport_created']);
 unset($_SESSION['none_disc']);
 
-$nameDisc = $_SESSION['disciplina']; //запрос(следующие несколько строчек), возвращающий номер таблицы с предметом, для последующего взаимодействия с этой таблицей
-$number_table = mysqli_query($connect, "SELECT lessons_hours.table_number FROM lessons_hours WHERE lessons_hours.discName = '$nameDisc'");
+
+$nameDisc = $_SESSION['disciplina'];
+
+//запрос(следующие несколько строчек), возвращающий номер таблицы с предметом, для последующего взаимодействия с этой таблицей
+$query = "SELECT lessons_hours.table_number FROM lessons_hours WHERE lessons_hours.discName = ? AND id_teacher = ? ";
+$stmt = mysqli_prepare($connect, $query);
+mysqli_stmt_bind_param($stmt, "ss", $nameDisc,$idTeacher);
+mysqli_stmt_execute($stmt);
+$number_table = mysqli_stmt_get_result($stmt);
 $number_table = mysqli_fetch_all($number_table);
 $number_table =  $number_table[0][0]; //номер таблицы с предметом
 
@@ -57,17 +65,6 @@ foreach ($itemListGroup as $item) {
 
 $listGroupUnique = array_unique($listGroupUnique); //после всех предыдущих манипуляций получаем список с группами преподавателя на конкретном предмете
 
-//if (empty($listGroupUnique)) {
-//    $query = "SELECT group_number FROM `lessons_hours` WHERE discName = ?;";
-//    $stmt = mysqli_prepare($connect, $query);
-//    mysqli_stmt_bind_param($stmt, "s", $discTeacher);
-//    mysqli_stmt_execute($stmt);
-//    $result = mysqli_stmt_get_result($stmt);
-//    $result = mysqli_fetch_all($result);
-//    foreach ($result as $i) {
-//        $listGroupUnique[] = $i[0];
-//    }
-//}
 mysqli_close($connect);
 ?>
 
@@ -106,14 +103,14 @@ mysqli_close($connect);
                 </div>
             </div>
             
-            <form action="main.php" class="show_group" method="post">
+            <form action="main.php" class="show_group" method="post" id='show_form'>
                 <select name="group_number" id="search_group" onchange="SaveValueDiscLS(this)">
                     <option value="Группа">Группа</option>
                     <?php foreach($listGroupUnique as $group) { // заполняем select группами
                         echo "<option value='$group'>$group</option>";
                     }?>
                 </select>
-                <button class="form-button" type="submit">Показать</button>
+                <button class="form-button" type="submit" id="show">Показать</button>
             </form>
             <span class="nav-span">
                 <nav>
@@ -143,14 +140,26 @@ mysqli_close($connect);
                 if (isset($_SESSION['zero_in_table'])) {
                     echo "<div style=\"background-color: rgba(255, 18, 0, 0.2);padding: 20px; border-radius: 7px; margin-bottom: 10px\">";
                     echo "<p align='center' style=\"font-family: sans-serif;font-size: 18px; margin: 5px 0 10px 0;\">Перед тем как добавить группу к предмету, <a style='color: #0071f0;' href='../add_group/add_student.php'>добавьте</a> в неё <b>хотябы одного студента.</b></p>";
-                    echo "<p align='center' style=\"font-family: sans-serif; margin: 5px 0 10px 0;max-width: 580px\">После добавления студента к группе, она <b>автоматически</b> добавится к предмету.</p>";
+                    echo "<p style=\"font-family: sans-serif; margin: 5px 0 10px 0;font-size: 18px;\">После добавления студента группа <b>автоматически</b> добавится к предмету.</p>";
+                    echo "<p style=\"font-family: sans-serif; margin: 5px 0 10px 0;font-size: 18px;\">Если вы хотите <b>создать новую группу</b>, то вы можете сделать это <a style='color: #0071f0;' href='#'>здесь</a>.</p>";
+                    echo "</div>";
+                }
+
+                if (empty($listGroupUnique) && !isset($_SESSION['zero_in_table'])) {
+                    echo "<div style=\"background-color: rgba(246, 255, 0, 0.3);padding: 20px; border-radius: 7px; margin-bottom: 10px;max-width: 650px\">";
+                    echo "<p style=\"font-family: sans-serif;font-size: 18px; margin: 5px 0 10px 0;\">Для начала работы с предметом добавьте к предмету группы, которые вы <b>указали в паспорте</b>. Это можно сделать в правом верхнем углу экрана.</p>";
+                    echo "</div>";
+                }
+
+                if (isset($_SESSION['updateIsOK'])) {
+                    echo "<div style=\"background-color: rgba(9, 255, 9, 0.2);padding: 20px; border-radius: 7px; margin-bottom: 10px\">";
+                    echo "<p align='center' style=\"font-family: sans-serif;font-size: 18px; margin: 5px \"><b>Изменения сохранены!</b></p>";
                     echo "</div>";
                 }
 
                 if (isset($_SESSION['group_added'])) {
                     echo "<div style=\"background-color: rgba(9, 255, 9, 0.2);padding: 20px; border-radius: 7px; margin-bottom: 10px\">";
-                    echo "<p align='center' style=\"font-family: sans-serif;font-size: 18px; margin: 5px \"><b>Группа добавлена к предмету!</b></p>";
-//                    echo "<p align='center' style=\"font-family: sans-serif; margin: 5px 0 10px 0;max-width: 580px\"><b</b></p>";
+                    echo "<p align='center' style=\"font-family: sans-serif;font-size: 18px; margin: 5px \"><b>Студент добавлен к группе!</b></p>";
                     echo "</div>";
                 }
                 ?>

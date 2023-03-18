@@ -7,7 +7,6 @@ let toSQLinput = document.querySelector('#toSQLinput');
 let tableInv = document.querySelectorAll('.a');
 let searchBtn = document.querySelector('.search_btn');
 let updateBtn = document.querySelector('#updateBtn');
-let selectSearchGroup = document.querySelector('#search_group');
 let selectUpdateGroup = document.querySelector('#selectUpdateGroup');
 let nameList = {};
 
@@ -55,10 +54,6 @@ function toSQL() { //функция превращающая список со �
 }
 function SaveValueDiscLS(el) { // косметическая функция
     localStorage.setItem(el.name, el.value);
-    
-    // if (selectSearchGroup.value) {
-    //     searchBtn.disabled = false
-    // }
 }
 function clsc() { //эта функция нигде не используется, но как память оставлю, когда-то она реализовывала обработку изменённых даннных для отправки на сервак(данный подход не подошёл)
     name_for_js.forEach(element => {
@@ -133,6 +128,20 @@ function showSettings() {
         ul.style.display = 'none'; // скрываем элемент, если он виден
     }
 }
+
+function a() {
+    let showForm = document.getElementById('show_form');
+    let inputGroup = document.getElementById('inputGroup')
+    showForm.addEventListener('submit', (e) => {
+
+        let selectSearchGroup = document.getElementById('search_group');
+        
+        if (selectSearchGroup.value === 'Группа' || inputGroup.value == '') {
+            e.preventDefault()
+        }
+    })
+}
+
 
 // document.getElementsByTagName('input').forEach((i) => {
 //     i.autocomplete = 'off';
