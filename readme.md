@@ -8,12 +8,12 @@
 
 # Стэк проекта:
 
-Frontend - HTML, CSS, JS <p>Привет</p>
-Backend - native php
-DataBase - MySQL
-AdminPanel for DB - phpMyAdmin
-Data Creation Scripts(for DB) - python
+<p>Frontend - HTML, CSS, JS</p>
+<p>Backend - native php</p>
+<p>DataBase - MySQL</p>
+<p>AdminPanel for DB - phpMyAdmin</p>
+<p>Data Creation Scripts(for DB) - python</p>
 
-Server - Nginx
-Server OS - Linux Ubuntu
-Local Development Server - OpenServer
+<p>Server - Nginx</p>
+<p>Server OS - Linux Ubuntu</p>
+<p>Local Development Server - OpenServer</p>
