@@ -25,8 +25,8 @@ allMainTableTh.forEach(el => {
         id = id.replace('tema', '')
         const modal = document.querySelector('#modal'+id);
         const { top, left } = e.target.getBoundingClientRect();
-        modal.style.top = `${top + window.scrollY + 40}px`;
-        modal.style.left = `${left + window.scrollX - 20}px`;
+        modal.style.top = `${top + window.scrollY + 45}px`;
+        modal.style.left = `${left + window.scrollX - 50}px`;
         modal.style.display = 'block';
 
         const leftConent = document.querySelector('.left-content');

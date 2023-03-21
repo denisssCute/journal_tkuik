@@ -373,11 +373,12 @@ textarea::selection {
     top: 50px;
     left: 50px;
     display: none;
-    background: #e8e8e8;
+    background: #f5f4f4;
     border-radius: 5px;
     padding: 10px;
     font-size: 14px;
     max-width: 180px;
+    border: 1px solid gray;
 }
 
 .modal button {
