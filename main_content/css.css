@@ -134,7 +134,6 @@ span {
     /* background-color: rgb(88, 88, 156); */
     border-right: 2px black solid;
     overflow-x:auto;
-
 }
 
 .right-content{
@@ -733,7 +732,47 @@ nav ul li:hover > ul {
     right: 0px;
 }
 
+.mg_ac_win {
+    width: 100%;
+    height: 100%;
+    min-width: 800px;
+    background: #ffffff88;
+    position: absolute;
+    z-index: 1000;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
 
+.mg_ac_win_child {
+    width: 1080px;
+    height: 520px;
+    background-color: rgb(248, 248, 248);
+    box-shadow: 0 4px 16px rgb(165, 165, 165);
+    padding: 15px;
+}
 
+.header_mg_ac_win {
+    display: flex;
+    justify-content: space-between;
+    border-bottom: 2px solid black;
+    padding-bottom: 7px;
+}
+.header_mg_ac_win button {
+    height: 25px;
+}
 
+.content_mg_ac_win {
+    height: 453px;
+    display: grid;
+    grid-template-columns: 15% 15% 70%;
+}
 
+.predmet_column, .group_column, .students_column {
+    padding: 5px;
+}
+
+.group_column {
+    border-left: 1px solid gray;
+    border-right: 1px solid gray;
+}

@@ -25,7 +25,7 @@ function showPersonStats(el) { //функция, вызывается при н�
 }
 function putH(el) { //главная функция по "поимке" нажатия на графу в таблице(для того чтобы подготовить данные к отправке на изменение)
     el.innerHTML = 'Н'
-    this.ondblclick = e => {el.innerHTML = '';Update(el)}
+    this.ondblclick = e => {el.innerHTML = '';  }
     Update(el)
 } 
 function Update(el) { // функция, отвечающая за определение, преобразование и подготовку к отправке данных на изменение. Вызывается в onlyH(el), алгоритм понятен только мне, я его придумал и называется он "костыль Дениса :)" 
@@ -47,6 +47,7 @@ function Update(el) { // функция, отвечающая за опреде�
             toSQLinput.value = nameList;
             toSQL();
         })
+        console.log(toSQLinput.value)
 }
 function toSQL() { //функция превращающая список со всеми изменениями в json
     toSQLinput.innerHTML = JSON.stringify(nameList)
@@ -109,7 +110,6 @@ menuItems.forEach(function(menuItem) {
             subMenu.style.display = "block";
         }
     });
-
     menuItem.addEventListener("mouseleave", function() {
         // Скрыть подменю при уходе курсора с элемента меню
         let subMenu = this.querySelector("ul");
@@ -140,6 +140,16 @@ function a() {
             e.preventDefault()
         }
     })
+}
+
+function openMg_Ac_Win() {
+    const mg_ac_win = document.querySelector('#manage_account_win');
+    mg_ac_win.style.display = "flex"
+}
+
+function closeMg_Ac_Win() {
+    const mg_ac_win = document.querySelector('#manage_account_win');
+    mg_ac_win.style.display = "none"
 }
 
 

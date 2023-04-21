@@ -40,7 +40,6 @@ if (empty($result)) {
 unset($_SESSION['pasport_created']);
 unset($_SESSION['none_disc']);
 
-
 $nameDisc = $_SESSION['disciplina'];
 
 //запрос(следующие несколько строчек), возвращающий номер таблицы с предметом, для последующего взаимодействия с этой таблицей
@@ -54,6 +53,16 @@ $number_table =  $number_table[0][0]; //номер таблицы с предм�
 
 $_SESSION['number_table'] = $number_table;
 
+$query = "SELECT discName, group_number  FROM lessons_hours WHERE id_teacher = ?";
+$stmt = mysqli_prepare($connect, $query);
+mysqli_stmt_bind_param($stmt, "s", $idTeacher);
+mysqli_stmt_execute($stmt);
+$array_disc_teacher = mysqli_stmt_get_result($stmt);
+$array_disc_teacher = mysqli_fetch_all($array_disc_teacher);
+print_r($array_disc_teacher);
+
+
+
 $listGroup = mysqli_query($connect, "SELECT students.group_number FROM students JOIN disciplina_$number_table ON disciplina_$number_table.id = students.id;"); //создание списка всех сущ-их групп для тэга select
 $listGroup = mysqli_fetch_all($listGroup);
 $listGroupUnique = array();
@@ -66,6 +75,7 @@ foreach ($itemListGroup as $item) {
 $listGroupUnique = array_unique($listGroupUnique); //после всех предыдущих манипуляций получаем список с группами преподавателя на конкретном предмете
 
 mysqli_close($connect);
+
 ?>
 
 <!DOCTYPE html>
@@ -76,11 +86,36 @@ mysqli_close($connect);
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <link rel="stylesheet" href="css.css">
     <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
-
     <title>Журнал</title>
 </head>
 <body>
-    <div class="container">
+    <div id="manage_account_win" class="mg_ac_win" style="font-family: sans-serif;">
+        <div class="mg_ac_win_child">
+            <div class="header_mg_ac_win">
+                <h2>Управление аккаунтом</h2>
+                <button onclick="closeMg_Ac_Win()">Закрыть</button>
+            </div>
+            <div class="content_mg_ac_win">
+                <div class="predmet_column">
+                    <h3>предметы</h3>
+                    <?php
+                    // $array_disc_teacher
+                    foreach ($array_disc_teacher as $line) {
+                        echo "<p style="background: gray;">$line[0]</p>";
+                    }
+                    
+                    ?>
+                </div>
+                <div class="group_column">
+                    <h3>группы</h3>
+                </div>
+                <div class="students_column">
+                    <h3>студенты</h3>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="container">       
         <div class="header">
             <div class="left-content-header">
                 <div class="menu-button">
@@ -112,6 +147,7 @@ mysqli_close($connect);
                 </select>
                 <button class="form-button" type="submit" id="show">Показать</button>
             </form>
+            
             <span class="nav-span">
                 <nav>
                     <ul>
@@ -129,12 +165,13 @@ mysqli_close($connect);
                     <span class="ul_settings" id="ul_settings" style="display: none;">
                     <ul style="list-style: none; font-weight: 400;text-align: right;">
                         <li class="li_settings" style=""><a href="show_pasport.php" style="color: #333;text-decoration: none;padding: 7px;">Паспорт предмета</a></li>
-                        <li class="li_settings" style=""><a href="" style="color: #333;text-decoration: none;padding: 7px;">Личный кабинет</a></li>
+                        <li class="li_settings" style="color: #333;text-decoration: none;padding: 7px;" onclick="openMg_Ac_Win()">Личный кабинет</li>
                     </ul>
                 </span>
             </span>
         </div>
         <div class="content">
+            
             <div class="left-content" style="display: flex;justify-content: center;align-items: center;">
                 <?php
                 if (isset($_SESSION['zero_in_table'])) {
