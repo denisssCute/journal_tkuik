@@ -37,6 +37,7 @@ if (isset($data['do_login'])) { //обработка авторизации по
 </head>
 <body>
     <div class="container">
+        <h1 style="position: absolute; left: auto; top: 70px; font-family: sans-serif; text-shadow: 0 4px 16px rgb(165, 165, 165);">Журнал посещений ТКУиК</h1>
         <div class="reg-win">
             <form class="form-main" action="index.php" method="post">
                 <h1 class="form-title">Вход</h1>

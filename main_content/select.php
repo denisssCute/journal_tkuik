@@ -1,6 +1,5 @@
 <?php
 require_once '../vendor/connect.php';
-
 session_start();
 
 if ($_SESSION['loggedin'] == false || !isset($_SESSION['id'])) {
@@ -24,13 +23,13 @@ $idTeacher = intval($_SESSION['id']);
 $discTeacher = $_SESSION['disciplina'];
 $nameTeacher = $_SESSION['name_teacher'];
 
-$query = "SELECT total FROM lessons_hours WHERE discName = ? AND id_teacher = ?";
+$query = "SELECT total FROM lessons_hours WHERE discName = ? AND id_teacher = ?"; //проверка наличия паспорта
 $stmt = mysqli_prepare($connect, $query);
 mysqli_stmt_bind_param($stmt, "si", $discTeacher,$idTeacher);
 mysqli_stmt_execute($stmt);
 $result = mysqli_stmt_get_result($stmt);
 $result = mysqli_fetch_all($result);
-if (empty($result)) {
+if (empty($result)) { 
     $_SESSION['none_disc'] = 'Такого предмета нет в базе! Обратитесь к администратору, либо подождите пока сайт оконачательно допилят :)';
     unset($_SESSION['pasport_created']);
     header('Location: ../select_disciplina/select_disciplina.php');
@@ -59,9 +58,16 @@ mysqli_stmt_bind_param($stmt, "s", $idTeacher);
 mysqli_stmt_execute($stmt);
 $array_disc_teacher = mysqli_stmt_get_result($stmt);
 $array_disc_teacher = mysqli_fetch_all($array_disc_teacher);
-print_r($array_disc_teacher);
 
 
+$query = "SELECT teachers.disciplins FROM `teachers` WHERE teachers.name = ?;"; //составление списка предметов преподавателя
+$stmt = mysqli_prepare($connect, $query);
+mysqli_stmt_bind_param($stmt, "s", $nameTeacher);
+mysqli_stmt_execute($stmt);
+$disciplins = mysqli_stmt_get_result($stmt);
+$disciplins = mysqli_fetch_all($disciplins);
+$disciplins = $disciplins[0][0];
+$disciplins = json_decode($disciplins, true);
 
 $listGroup = mysqli_query($connect, "SELECT students.group_number FROM students JOIN disciplina_$number_table ON disciplina_$number_table.id = students.id;"); //создание списка всех сущ-их групп для тэга select
 $listGroup = mysqli_fetch_all($listGroup);
@@ -71,6 +77,10 @@ foreach ($itemListGroup as $item) {
         $listGroupUnique[] = $item;
     }
 }
+
+$q = mysqli_query($connect, "SELECT `name` FROM students JOIN disciplina_$number_table ON disciplina_$number_table.id = students.id;"); //вытаскиваем всех студентов, которые связаны с преподавателем
+$students = mysqli_fetch_all($q);
+
 
 $listGroupUnique = array_unique($listGroupUnique); //после всех предыдущих манипуляций получаем список с группами преподавателя на конкретном предмете
 
@@ -97,20 +107,39 @@ mysqli_close($connect);
             </div>
             <div class="content_mg_ac_win">
                 <div class="predmet_column">
-                    <h3>предметы</h3>
+                    <h3>Предметы</h3>
                     <?php
-                    // $array_disc_teacher
-                    foreach ($array_disc_teacher as $line) {
-                        // echo "<p style="background: gray;">$line[0]</p>";
-                    }
                     
+                    $array_disc_teacher_unique = array();
+                    foreach($array_disc_teacher as $unit) {
+                        $array_disc_teacher_unique[] = $unit[0];
+                    }
+
+                    $array_disc_teacher_unique = array_unique($array_disc_teacher_unique);
+
+                    foreach ($array_disc_teacher_unique as $disc) {
+                        echo "<p class='modal_win_unit'>$disc</p>";
+                    }
                     ?>
                 </div>
                 <div class="group_column">
-                    <h3>группы</h3>
+                    <h3>Группы</h3>
+                    <?php
+                    foreach ($array_disc_teacher as $line) {
+                        $group = $line[1];
+                        $disc_for_group = $line[0];
+                        echo "<p class='modal_win_unit' value=\"$disc_for_group\">$group</p>";
+                    }
+                    ?>
                 </div>
                 <div class="students_column">
-                    <h3>студенты</h3>
+                    <h3>Студенты</h3>
+                    <?php
+                    foreach ($students as $stud) {
+                        $stud = $stud[0];
+                        echo "<p class='modal_win_unit'>$stud</p>";
+                    }
+                    ?>
                 </div>
             </div>
         </div>
@@ -137,7 +166,6 @@ mysqli_close($connect);
                     </div>
                 </div>
             </div>
-            
             <form action="main.php" class="show_group" method="post" id='show_form'>
                 <select name="group_number" id="search_group" onchange="SaveValueDiscLS(this)">
                     <option value="Группа">Группа</option>

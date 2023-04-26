@@ -736,10 +736,10 @@ nav ul li:hover > ul {
     width: 100%;
     height: 100%;
     min-width: 800px;
-    background: #ffffff88;
+    background: #ffffffea;
     position: absolute;
     z-index: 1000;
-    display: flex;
+    display: none;
     align-items: center;
     justify-content: center;
 }
@@ -773,6 +773,24 @@ nav ul li:hover > ul {
 }
 
 .group_column {
-    border-left: 1px solid gray;
-    border-right: 1px solid gray;
+    border-left: 2px solid rgb(0, 0, 0);
+    border-right: 2px solid rgb(0, 0, 0);
+}
+
+.modal_win_unit {
+    background: rgba(0, 104, 240, 0.587);
+    border-radius: 5px;
+    padding: 7px 5px;
+    margin-bottom: 5px;
+    cursor: pointer;
+    transition: .1s;
+}
+
+.modal_win_unit:hover {
+    background: rgba(0, 104, 240, 0.459);
+    transition: .1s;
+}
+.modal_win_unit:active {
+    transition: .1s;
+    background: rgba(0, 104, 240, 0.607);
 }
