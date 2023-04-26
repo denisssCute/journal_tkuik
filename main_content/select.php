@@ -101,7 +101,7 @@ mysqli_close($connect);
                     <?php
                     // $array_disc_teacher
                     foreach ($array_disc_teacher as $line) {
-                        echo "<p style="background: gray;">$line[0]</p>";
+                        // echo "<p style="background: gray;">$line[0]</p>";
                     }
                     
                     ?>
