@@ -77,15 +77,23 @@ foreach ($itemListGroup as $item) {
         $listGroupUnique[] = $item;
     }
 }
-
-$q = mysqli_query($connect, "SELECT `name` FROM students JOIN disciplina_$number_table ON disciplina_$number_table.id = students.id;"); //вытаскиваем всех студентов, которые связаны с преподавателем
-$students = mysqli_fetch_all($q);
-
+$query = "SELECT DISTINCT lessons_hours.table_number FROM lessons_hours WHERE id_teacher = ?;"; //составление списка предметов преподавателя
+$stmt = mysqli_prepare($connect, $query);
+mysqli_stmt_bind_param($stmt, "i", $idTeacher);
+mysqli_stmt_execute($stmt);
+$numbers_tables = mysqli_stmt_get_result($stmt);
+$numbers_tables = mysqli_fetch_all($numbers_tables);
+foreach ($numbers_tables as $nt) {
+    $nt = $nt[0];
+    $q = mysqli_query($connect, "SELECT `name`, `group_number` FROM students JOIN disciplina_$nt ON disciplina_$nt.id = students.id;"); //вытаскиваем всех студентов, которые связаны с преподавателем
+    $students = mysqli_fetch_all($q);
+    $stud_for_teach[] = $students;
+}
+// print_r($stud_for_teach);
 
 $listGroupUnique = array_unique($listGroupUnique); //после всех предыдущих манипуляций получаем список с группами преподавателя на конкретном предмете
 
 mysqli_close($connect);
-
 ?>
 
 <!DOCTYPE html>
@@ -118,7 +126,7 @@ mysqli_close($connect);
                     $array_disc_teacher_unique = array_unique($array_disc_teacher_unique);
 
                     foreach ($array_disc_teacher_unique as $disc) {
-                        echo "<p class='modal_win_unit'>$disc</p>";
+                        echo "<p class='modal_win_unit disciplina'>$disc</p>";
                     }
                     ?>
                 </div>
@@ -128,16 +136,20 @@ mysqli_close($connect);
                     foreach ($array_disc_teacher as $line) {
                         $group = $line[1];
                         $disc_for_group = $line[0];
-                        echo "<p class='modal_win_unit' value=\"$disc_for_group\">$group</p>";
+                        echo "<p class='modal_win_unit group' value=\"$disc_for_group\">$group</p>";
                     }
                     ?>
                 </div>
                 <div class="students_column">
                     <h3>Студенты</h3>
                     <?php
-                    foreach ($students as $stud) {
-                        $stud = $stud[0];
-                        echo "<p class='modal_win_unit'>$stud</p>";
+                    foreach ($stud_for_teach as $stud) {
+                        foreach ($stud as $s) {
+                            $stud = $s[0];
+                            $group = $s[1];
+                            echo "<p class='modal_win_stud student' value='$group'>$stud</p>";    
+                        }
+                        
                     }
                     ?>
                 </div>
